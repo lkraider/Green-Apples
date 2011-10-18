@@ -117,9 +117,10 @@ def merge(merged_fname, old_fname, new_fname):
 STRINGS_FILE = 'Localizable.strings'
 
 def localize(path):
-    languages = [name for name in os.listdir(path) if name.endswith('.lproj') and os.path.isdir(name)]
+    languages = [name for name in os.listdir(path) if name.endswith('.lproj') and os.path.isdir(path + os.path.sep + name)]
     
     for language in languages:
+    language = path + os.path.sep + language
         original = merged = language + os.path.sep + STRINGS_FILE
         old = original + '.old'
         new = original + '.new'
@@ -133,5 +134,5 @@ def localize(path):
             os.system('genstrings -q -o "%s" `find . -name "*.m"`' % language)
 
 if __name__ == '__main__':
-    localize(os.getcwd())
-
+    path = os.path.realpath(argv.pop()) if len(argv) > 1 else os.getcwd()
+    localize(path)
